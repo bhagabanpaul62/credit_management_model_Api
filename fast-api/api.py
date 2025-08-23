@@ -6,7 +6,8 @@ import numpy as np
 from pathlib import Path
 from typing import Optional
 
-ARTIFACT_DIR = Path('credit_risk') / 'artifacts'
+# Use local artifacts directory inside this fast-api project
+ARTIFACT_DIR = Path(__file__).resolve().parent / 'artifacts'
 
 def _load_artifacts():
     """Load model artifacts, with a clearer error if missing."""
@@ -20,8 +21,8 @@ def _load_artifacts():
     if missing:
         raise RuntimeError(
             "Artifacts missing: " + ', '.join(missing) +
-            "\nGenerate them by running 'python credit_risk/train_credit_model.py' "
-            "or create synthetic ones via 'python credit_risk/create_synthetic_artifacts.py'."
+            "\nGenerate them by running 'python train_credit_model.py' "
+            "or create synthetic ones via 'python create_synthetic_artifacts.py' inside fast-api folder."
         )
     model_ = joblib.load(required[0])
     scaler_ = joblib.load(required[1])
