@@ -7,10 +7,29 @@ from pathlib import Path
 from typing import Optional
 
 ARTIFACT_DIR = Path('credit_risk') / 'artifacts'
-model = joblib.load(ARTIFACT_DIR / 'model.pkl')
-scaler = joblib.load(ARTIFACT_DIR / 'scaler.pkl')
-feature_names = joblib.load(ARTIFACT_DIR / 'feature_names.pkl')
-impute_values = joblib.load(ARTIFACT_DIR / 'impute_values.pkl')
+
+def _load_artifacts():
+    """Load model artifacts, with a clearer error if missing."""
+    required = [
+        ARTIFACT_DIR / 'model.pkl',
+        ARTIFACT_DIR / 'scaler.pkl',
+        ARTIFACT_DIR / 'feature_names.pkl',
+        ARTIFACT_DIR / 'impute_values.pkl'
+    ]
+    missing = [p.name for p in required if not p.exists()]
+    if missing:
+        raise RuntimeError(
+            "Artifacts missing: " + ', '.join(missing) +
+            "\nGenerate them by running 'python credit_risk/train_credit_model.py' "
+            "or create synthetic ones via 'python credit_risk/create_synthetic_artifacts.py'."
+        )
+    model_ = joblib.load(required[0])
+    scaler_ = joblib.load(required[1])
+    feature_names_ = joblib.load(required[2])
+    impute_values_ = joblib.load(required[3])
+    return model_, scaler_, feature_names_, impute_values_
+
+model, scaler, feature_names, impute_values = _load_artifacts()
 
 app = FastAPI(title='Credit Risk Scoring API', version="1.1.0")
 

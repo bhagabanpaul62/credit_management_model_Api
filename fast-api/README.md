@@ -1,16 +1,21 @@
 # Credit Risk Model
 
 ## Train
+
 ```
 python credit_risk/train_credit_model.py
 ```
+
 Artifacts saved to `credit_risk/artifacts`.
 
 ## Run API
+
 ```
 uvicorn credit_risk.api:app --reload --port 8000
 ```
+
 POST JSON example:
+
 ```json
 {
   "data": {
